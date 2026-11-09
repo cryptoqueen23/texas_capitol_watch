@@ -14,13 +14,13 @@ export default async function handler(req,res){
   if(!response.ok)throw Error("Official site returned HTTP "+response.status);
   const html=await response.text();
   const text=clean(html);
-  if(!text.includes("History for")&&!text.includes("Last Action:"))throw Error("Official history page could not be verified");
+  if(!/\b(?:History for|Last Action:|Caption Text:|Bill History|Actions)\b/i.test(text))throw Error("Official history page could not be verified");
   const lastAction=pick(html,"Last Action:",["Caption Version:","Caption Text:","Author:"]);
   const caption=pick(html,"Caption Text:",["Author:","Coauthor:","Sponsor:","Subjects:"]);
   const author=pick(html,"Author:",["Coauthor:","Sponsor:","Subjects:"]);
   const committee=pick(html,"House Committee:",["House Committee Status:","Senate Committee:","Actions are in"]);
   const senateCommittee=pick(html,"Senate Committee:",["Senate Committee Status:","House Committee:","Actions are in"]);
   res.setHeader("Cache-Control","s-maxage=900, stale-while-revalidate=900");
-  return res.status(200).json({bill,session,source:"Texas Legislature Online",sourceUrl:details,checkedAt:new Date().toISOString(),lastAction:lastAction||null,caption:caption||null,author:author||null,houseCommittee:committee||null,senateCommittee:senateCommittee||null,verified:!!lastAction,note:"Official history is authoritative. Extracted fields may be unavailable or incomplete; verify details on the linked official page. No status is inferred from a bill number."});
+  return res.status(200).json({bill,session,source:"Texas Legislature Online",sourceUrl:details,checkedAt:new Date().toISOString(),lastAction:lastAction||null,caption:caption||null,author:author||null,houseCommittee:committee||null,senateCommittee:senateCommittee||null,verified:!!(lastAction||caption),note:"Official history is authoritative. Extracted fields may be unavailable or incomplete; verify details on the linked official page. No status is inferred from a bill number."});
  }catch(e){return res.status(502).json({bill,session,sourceUrl:history,verified:false,error:"Official bill history unavailable. Open the source link for current information."})}finally{clearTimeout(timer)}
 }
