@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  issues: write
 concurrency:
   group: texas-bill-refresh
   cancel-in-progress: false
@@ -58,4 +59,21 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "chore: refresh Texas filed bills"
             git push
+          fi
+  alert:
+    needs: refresh
+    if: ${{ always() && needs.refresh.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open or update refresh failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          existing=$(gh issue list --repo "$GH_REPO" --state open --search 'Bill refresh failed in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$GH_REPO" --body "Another scheduled bill refresh failed: $RUN_URL"
+          else
+            gh issue create --repo "$GH_REPO" --title "Bill refresh failed" --body "The scheduled Texas bill snapshot refresh failed. Investigate the run: $RUN_URL. The previous verified snapshot should remain available."
           fi
