@@ -30,7 +30,7 @@ async function run(){
   const response=await fetch(url,{headers:{"User-Agent":"Mozilla/5.0 (compatible; TexasCapitolWatchdog/1.0)","Accept":"text/html"},signal:AbortSignal.timeout(25000)});
   if(!response.ok)throw Error(chamber+" HTTP "+response.status);
   const items=parse(await response.text(),chamber);
-  const bills=items.filter(x=>{const match=x.action.match(/\b(\d{1,2}\/\d{1,2}\/\d{4})\b/);return !!match&&match[1]===texasActionDate&&/\b[HS] Filed\b/i.test(x.action)}).map(x=>x.bill);
+  const bills=items.filter(x=>{const match=x.action.match(/\b(\d{1,2}\/\d{1,2}\/\d{4})\b/);return !!match&&match[1].split("/").map((v,i)=>i<2?String(Number(v)):v).join("/")===texasActionDate&&/\b[HS] Filed\b/i.test(x.action)}).map(x=>x.bill);
   entries[chamber]={source:url,reportCount:items.length,count:bills.length,bills:[...new Set(bills)].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))};
  }
  const folder=path.join("data","filings");await fs.mkdir(folder,{recursive:true});
