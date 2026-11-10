@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-10",
+  "timeZone": "America/Chicago",
+  "checkedAt": "2026-11-10T15:30:35.856Z",
+  "note": "Bills whose latest official action is Filed on the Texas date. Later actions can change this count; it is not an immutable first-filing record.",
+  "house": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=housefiled&LegSess=90R",
+    "reportCount": 988,
+    "count": 16,
+    "bills": [
+      "HB1011",
+      "HB1012",
+      "HB1013",
+      "HB1014",
+      "HB1015",
+      "HB1016",
+      "HB1017",
+      "HB1018",
+      "HB1019",
+      "HB1020",
+      "HB1021",
+      "HB1022",
+      "HB1023",
+      "HJR69",
+      "HR17",
+      "HR18"
+    ]
+  },
+  "senate": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=senatefiled&LegSess=90R",
+    "reportCount": 290,
+    "count": 0,
+    "bills": []
+  }
+}
