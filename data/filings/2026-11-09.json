@@ -1,11 +1,11 @@
 {
   "date": "2026-11-09",
   "timeZone": "America/Chicago",
-  "checkedAt": "2026-11-09T22:03:38.400Z",
+  "checkedAt": "2026-11-10T04:45:34.089Z",
   "note": "Captured bill links from today's official reports. Counts are links extracted, not an official cumulative session count. Report context can change.",
   "house": {
     "source": "https://capitol.texas.gov/Reports/Report.aspx?id=todayhousefiled",
-    "count": 947,
+    "count": 972,
     "bills": [
       "HB101",
       "HB102",
@@ -883,6 +883,30 @@
       "HB983",
       "HB984",
       "HB985",
+      "HB986",
+      "HB987",
+      "HB988",
+      "HB989",
+      "HB990",
+      "HB991",
+      "HB992",
+      "HB993",
+      "HB994",
+      "HB995",
+      "HB996",
+      "HB997",
+      "HB998",
+      "HB999",
+      "HB1001",
+      "HB1002",
+      "HB1003",
+      "HB1004",
+      "HB1005",
+      "HB1006",
+      "HB1007",
+      "HB1008",
+      "HB1009",
+      "HB1010",
       "HCR6",
       "HCR7",
       "HCR8",
@@ -953,12 +977,13 @@
       "HR12",
       "HR13",
       "HR14",
-      "HR15"
+      "HR15",
+      "HR16"
     ]
   },
   "senate": {
     "source": "https://capitol.texas.gov/Reports/Report.aspx?id=todaysenatefiled",
-    "count": 289,
+    "count": 290,
     "bills": [
       "SB31",
       "SB32",
@@ -1248,7 +1273,8 @@
       "SJR11",
       "SJR12",
       "SJR13",
-      "SJR14"
+      "SJR14",
+      "SJR15"
     ]
   }
 }
