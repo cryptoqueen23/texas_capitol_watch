@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-11",
+  "timeZone": "America/Chicago",
+  "checkedAt": "2026-11-12T04:04:36.487Z",
+  "note": "Bills whose latest official action is Filed on the Texas date. Later actions can change this count; it is not an immutable first-filing record.",
+  "house": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=housefiled&LegSess=90R",
+    "reportCount": 1059,
+    "count": 0,
+    "bills": []
+  },
+  "senate": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=senatefiled&LegSess=90R",
+    "reportCount": 319,
+    "count": 0,
+    "bills": []
+  }
+}
