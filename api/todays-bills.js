@@ -25,7 +25,7 @@ const TOPICS=[["First Amendment","speech, religion, press, assembly",/free speec
  let priority="review",reason="Caption does not establish a significant policy change; manual review recommended";
  if(ceremonial){reason="Ceremonial or awareness designation; no substantive legal change identified in caption"}
  else if(studyOnly){priority="medium";reason="Study or reporting proposal; potential future policy impact, not an immediate change"}
- else if(majorVoting||gunRestrictions||fundamentalRights){priority="critical";reason="Caption proposes a substantive change affecting voting or protected rights"}
+ else if(majorVoting||gunRestrictions||fundamentalRights){priority="high";reason="Caption flags a potentially significant voting, firearms, or rights proposal; full bill text and legal effect require review"}
  else if(electionOversight){priority="high";reason="Election administration, poll watcher oversight, or ballot recount procedure; full text review needed"}
  else if(majorTax||constitutionalProposal||economic){priority="high";reason=constitutionalProposal?"Proposed constitutional change; importance depends on subject":economic?"Economic, healthcare, education or utility policy with potential broad impact":"Substantive tax policy change"}
  else if(substantiveCrime||justiceScope){priority="medium";reason="Criminal justice or prosecution policy; scope requires review of full text"}
