@@ -1,9 +1,13 @@
 name: Refresh Texas filed bills
 on:
   schedule:
-    # Run at 9 AM and 5 PM Central Standard Time (10 AM / 6 PM during daylight saving).
-    # GitHub schedules may start late; do not skip the actual refresh based on clock hour.
-    - cron: '0 15,23 * * *'
+    # Each local hour has one UTC time for daylight time and one for standard time.
+    - cron: '0 14 * * 1-5' # 9 AM CDT
+    - cron: '0 15 * * 1-5' # 9 AM CST
+    - cron: '0 18 * * 1-5' # 1 PM CDT
+    - cron: '0 19 * * 1-5' # 1 PM CST
+    - cron: '0 23 * * 1-5' # 6 PM CDT
+    - cron: '0 0 * * 2-6' # 6 PM CST (next UTC day)
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,7 +20,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Select correct Texas daylight/standard-time schedule
+        id: texas
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_CRON: ${{ github.event.schedule }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const manual=process.env.EVENT_NAME==='workflow_dispatch';
+          const now=new Date();
+          const noonUTC=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),12));
+          const texasHourAtNoon=Number(new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',hourCycle:'h23'}).format(noonUTC));
+          const dst=texasHourAtNoon===7;
+          const cron=process.env.EVENT_CRON;
+          const allowed=dst?['0 14 * * 1-5','0 18 * * 1-5','0 23 * * 1-5']:['0 15 * * 1-5','0 19 * * 1-5','0 0 * * 2-6'];
+          const run=manual||allowed.includes(cron);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,'run='+run+'\n');
+          console.log('Schedule:',cron,'Daylight saving:',dst,'Execute:',run);
+          NODE
       - name: Download and validate official-source bill feed
+        if: steps.texas.outputs.run == 'true'
         env:
           FEED_URL: https://texascapitolwatch.vercel.app/api/todays-bills
         run: |
@@ -40,6 +64,7 @@ jobs:
           console.log('Validated '+feed.bills.length+' filed bills at '+new Date().toISOString());
           NODE
       - name: Commit updated bill snapshot
+        if: steps.texas.outputs.run == 'true'
         run: |
           git config user.name "Texas Capitol Watchdog Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
