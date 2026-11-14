@@ -1,0 +1,29 @@
+name: Validate website and legislative data
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser scripts and internal asset links
+        run: node --test tests/site.test.cjs
+      - name: Validate saved official bill snapshot
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const x=JSON.parse(fs.readFileSync('data/todays-bills.json','utf8'));
+          if(!Array.isArray(x.bills)||x.bills.length<100||x.partial||x.mode!=='session')throw Error('Invalid complete session snapshot');
+          const ids=x.bills.map(b=>b.bill);
+          if(new Set(ids).size!==ids.length)throw Error('Duplicate bill identifiers');
+          if(x.bills.some(b=>!b.bill||!b.caption||!b.sourceUrl))throw Error('Missing required bill fields');
+          console.log('Validated',ids.length,'saved bills');
+          NODE
