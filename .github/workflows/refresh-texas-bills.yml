@@ -1,8 +1,9 @@
 name: Refresh Texas filed bills
 on:
   schedule:
-    # 9 AM and 5 PM America/Chicago, covering CST and CDT.
-    - cron: '0 14,15,22,23 * * *'
+    # Run at 9 AM and 5 PM Central Standard Time (10 AM / 6 PM during daylight saving).
+    # GitHub schedules may start late; do not skip the actual refresh based on clock hour.
+    - cron: '0 15,23 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,19 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check Texas local scheduled hour
-        id: texas
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-        run: |
-          hour=$(TZ=America/Chicago date +%H)
-          if [ "$EVENT_NAME" = "workflow_dispatch" ] || [ "$hour" = "09" ] || [ "$hour" = "17" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          fi
       - name: Download and validate official-source bill feed
-        if: steps.texas.outputs.run == 'true'
         env:
           FEED_URL: https://texascapitolwatch.vercel.app/api/todays-bills
         run: |
@@ -48,10 +37,9 @@ jobs:
               throw Error('Bill count unexpectedly decreased: '+feed.bills.length+' < '+previous.bills.length);
           }
           fs.writeFileSync(file,JSON.stringify({...feed,scheduledRefreshAt:new Date().toISOString()})+'\n');
-          console.log('Validated '+feed.bills.length+' filed bills');
+          console.log('Validated '+feed.bills.length+' filed bills at '+new Date().toISOString());
           NODE
       - name: Commit updated bill snapshot
-        if: steps.texas.outputs.run == 'true'
         run: |
           git config user.name "Texas Capitol Watchdog Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
