@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-19",
+  "timeZone": "America/Chicago",
+  "checkedAt": "2026-11-20T04:12:53.404Z",
+  "note": "Bills whose latest official action is Filed on the Texas date. Later actions can change this count; it is not an immutable first-filing record.",
+  "house": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=housefiled&LegSess=90R",
+    "reportCount": 1245,
+    "count": 13,
+    "bills": [
+      "HB1246",
+      "HB1247",
+      "HB1248",
+      "HB1249",
+      "HB1250",
+      "HB1251",
+      "HB1252",
+      "HB1253",
+      "HB1254",
+      "HB1255",
+      "HB1256",
+      "HCR21",
+      "HR29"
+    ]
+  },
+  "senate": {
+    "source": "https://capitol.texas.gov/reports/Report.aspx?ID=senatefiled&LegSess=90R",
+    "reportCount": 442,
+    "count": 25,
+    "bills": [
+      "SB435",
+      "SB436",
+      "SB437",
+      "SB438",
+      "SB439",
+      "SB440",
+      "SB441",
+      "SB442",
+      "SB443",
+      "SB444",
+      "SB445",
+      "SB446",
+      "SB447",
+      "SB448",
+      "SB449",
+      "SB450",
+      "SB451",
+      "SB452",
+      "SB453",
+      "SB454",
+      "SB455",
+      "SB456",
+      "SB457",
+      "SB458",
+      "SB459"
+    ]
+  }
+}
